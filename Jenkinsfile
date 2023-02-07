@@ -25,6 +25,6 @@ pipeline {
 		docker-compose logs -t --tail=10
 		'''
 	       }
-        }
+	}
     }
 }
