@@ -1,0 +1,25 @@
+docker-compose
+version: 3
+services:
+  spring:
+    build: .
+    image: spring:v1
+    ports:
+      - "8080:8080"
+
+Dockerfile
+FROM amazoncorretto:11-alpine 
+COPY target/*.jar testing-web-complete.jar
+CMD ["java","-jar","testing-web-complete.jar"]
+
+Dockerfilev2
+FROM amazoncorretto:11-alpine 
+WORKDIR /opt/string
+COPY . .
+RUN ./mvnw package
+
+FROM amazoncorretto:11-alpine AS builder
+COPY --from=builder target/*.jar testing-web-complete.jar
+CMD ["java","-jar","testing-web-complete.jar"]
+
+
