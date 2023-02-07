@@ -1,19 +1,29 @@
 pipeline {
     agent any
+
     options {
-	timeout(time: 1, unit: 'HOURS')
 	timestamps()
 	ansiColor('xterm')
 	}
     stages {
         stage('Build') {
             steps {
-                sh 'docker-compose build'
+                sh '''./mvnw package
+		docker-compose build
+		'''
 		}
-        }
+        
+	post{
+		always{
+			junit 'target/surefire-reports/*.xml'
+			}
+		}
+	}
         stage('Deploy') {
             steps {
-               sh 'docker-compose up -d'
+               sh '''docker-compose up -d
+		docker-compose logs -t --tail=10
+		'''
 	       }
         }
     }
